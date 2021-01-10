@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"math/rand"
+	"time"
 
 	"github.com/aalpar/deheap"
 	"github.com/pkg/errors"
@@ -182,6 +184,7 @@ func (p *pipe) Close() {
 // one is not required
 func newLess(orderBy string) (less lessFn, fraction int, err error) {
 	fraction = -1
+	rand.Seed(time.Now().UnixNano())
 	if orderBy == "" {
 		return nil, fraction, nil
 	}
@@ -200,6 +203,14 @@ func newLess(orderBy string) (less lessFn, fraction int, err error) {
 			ctx := context.Background()
 			return a.Src.ModTime(ctx).Before(b.Src.ModTime(ctx))
 		}
+	case "random":
+		less = func(a, b fs.ObjectPair) bool {
+			if rand.Intn(100) > 50 {
+				return true
+			}
+			return false
+		}
+
 	default:
 		return nil, fraction, errors.Errorf("unknown --order-by comparison %q", parts[0])
 	}
