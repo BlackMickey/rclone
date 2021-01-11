@@ -205,7 +205,7 @@ func newLess(orderBy string) (less lessFn, fraction int, err error) {
 	case "random":
 		less = func(a, b fs.ObjectPair) bool {
 			rand.Seed(time.Now().UnixNano())
-			return a.Src.Size()%1000+rand.Int63n(100) < b.Src.Size()%1000+rand.Int63n(100)
+			return a.Src.Size()%1000+rand.Int63n(100)-50 < b.Src.Size()%1000+rand.Int63n(100)-50
 		}
 	default:
 		return nil, fraction, errors.Errorf("unknown --order-by comparison %q", parts[0])
