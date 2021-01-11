@@ -184,7 +184,6 @@ func (p *pipe) Close() {
 // one is not required
 func newLess(orderBy string) (less lessFn, fraction int, err error) {
 	fraction = -1
-	rand.Seed(time.Now().UnixNano())
 	if orderBy == "" {
 		return nil, fraction, nil
 	}
@@ -205,7 +204,8 @@ func newLess(orderBy string) (less lessFn, fraction int, err error) {
 		}
 	case "random":
 		less = func(a, b fs.ObjectPair) bool {
-			return  rand.Float32() > 0.5
+			rand.Seed(time.Now().UnixNano())
+			return a.Src.Size()%1000+rand.Int63n(100) < b.Src.Size()%1000+rand.Int63n(100)
 		}
 	default:
 		return nil, fraction, errors.Errorf("unknown --order-by comparison %q", parts[0])
