@@ -205,10 +205,7 @@ func newLess(orderBy string) (less lessFn, fraction int, err error) {
 		}
 	case "random":
 		less = func(a, b fs.ObjectPair) bool {
-			if rand.Float32() > 0.5 {
-				return true
-			}
-			return false
+			return  rand.Float32() > 0.5
 		}
 	default:
 		return nil, fraction, errors.Errorf("unknown --order-by comparison %q", parts[0])
