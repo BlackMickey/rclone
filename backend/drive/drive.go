@@ -734,6 +734,7 @@ func (p *ServiceAccountPool) _getFile(remove bool) (file string, err error) {
 	for k := range files {
 		keys = append(keys, k)
 	}
+	rand.Seed(time.Now().UnixNano())
 	r := rand.Intn(len(keys))
 	file = keys[r]
 
